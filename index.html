@@ -3,68 +3,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
+  <meta name="theme-color" content="#0b0b18">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Конспекты — учебное Telegram Mini App: лекции, квизы, вопросы сессии и материалы.">
   <title>Конспекты</title>
+
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+      loader: { load: ['[tex]/ams'] },
+      tex: {
+        packages: { '[+]': ['ams'] },
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: false,
+        processEnvironments: true
+      },
+      chtml: {
+        matchFontHeight: false,
+        displayAlign: 'center',
+        displayIndent: '0'
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      startup: {
+        typeset: false,
+        ready: function () {
+          MathJax.startup.defaultReady();
+          window.dispatchEvent(new Event('mathjax-ready'));
+        }
+      }
     };
   </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-  <script src="./data.js"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script defer src="./data.js"></script>
   <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
 </head>
 <body>
-  <div id="app" class="app">
-    <header class="topbar">
-      <button id="menuBtn" class="icon-btn" type="button" aria-label="Меню">☰</button>
-      <div class="topbar-copy">
-        <div id="crumb" class="crumb">Конспекты</div>
-        <div id="screenTitle" class="screen-title">Предметы</div>
+  <div id="appShell" class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Основная навигация">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">К</span>
+        <div><strong>Конспекты</strong><small>study workspace</small></div>
       </div>
-      <button id="searchBtn" class="icon-btn" type="button" aria-label="Поиск">⌕</button>
-    </header>
 
-    <main id="screen" class="screen"></main>
+      <nav class="side-nav">
+        <button type="button" data-nav="home" data-route="#/"><span>⌂</span><b>Главная</b></button>
+        <button type="button" data-nav="session" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
+        <button type="button" data-nav="materials" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
+        <button type="button" data-nav="settings" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
+      </nav>
 
-    <nav class="bottom-nav" aria-label="Навигация">
-      <button class="bottom-item active" data-route="#/" type="button"><span>⌂</span><b>Предметы</b></button>
-      <button class="bottom-item" data-route="#/search" type="button"><span>⌕</span><b>Поиск</b></button>
-      <button class="bottom-item" data-route="#/settings" type="button"><span>⚙</span><b>Настройки</b></button>
+      <div class="side-section-label">Предметы</div>
+      <div id="sidebarSubjects" class="sidebar-subjects"></div>
+      <div class="side-spacer"></div>
+      <button class="side-search" type="button" data-route="#/search"><span>⌕</span><b>Поиск</b><kbd>/</kbd></button>
+    </aside>
+
+    <div class="app-main">
+      <header class="topbar">
+        <button id="leftBtn" class="icon-btn" type="button" aria-label="Меню">☰</button>
+        <div class="topbar-copy">
+          <div id="crumb" class="crumb">Конспекты</div>
+          <div id="screenTitle" class="screen-title">Главная</div>
+        </div>
+        <button id="searchBtn" class="icon-btn" type="button" aria-label="Поиск">⌕</button>
+      </header>
+
+      <main id="screen" class="screen" tabindex="-1"></main>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Основная навигация">
+      <button type="button" data-nav="home" data-route="#/"><span>⌂</span><b>Главная</b></button>
+      <button type="button" data-nav="session" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
+      <button type="button" data-nav="materials" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
+      <button type="button" data-nav="settings" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
     </nav>
   </div>
 
   <div id="drawer" class="drawer-layer hidden" aria-hidden="true">
-    <div id="drawerShade" class="drawer-shade"></div>
-    <aside class="drawer" role="dialog" aria-modal="true">
+    <button id="drawerShade" class="drawer-shade" type="button" aria-label="Закрыть меню"></button>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-label="Меню">
       <div class="drawer-head">
-        <div>
-          <div class="drawer-title">Конспекты</div>
-          <div id="drawerStats" class="drawer-subtitle"></div>
-        </div>
+        <div class="brand compact-brand"><span class="brand-mark">К</span><div><strong>Конспекты</strong><small>Навигация</small></div></div>
         <button id="drawerClose" class="icon-btn" type="button" aria-label="Закрыть">×</button>
       </div>
-      <div class="drawer-actions">
-        <button class="drawer-link" data-route="#/" type="button">⌂ <span>Предметы</span></button>
-        <button class="drawer-link" data-route="#/search" type="button">⌕ <span>Поиск</span></button>
-        <button class="drawer-link" data-route="#/settings" type="button">⚙ <span>Оформление</span></button>
-      </div>
-      <div class="drawer-section">
-        <div class="drawer-label">Темы</div>
-        <div id="quickThemes" class="quick-grid"></div>
-      </div>
-      <div class="drawer-section">
-        <div class="drawer-label">Шрифт</div>
-        <div id="quickFonts" class="quick-fonts"></div>
-      </div>
-      <button id="resetProgress" class="danger-btn" type="button">Сбросить прогресс</button>
+      <nav class="drawer-nav">
+        <button type="button" data-route="#/"><span>⌂</span><b>Главная</b></button>
+        <button type="button" data-route="#/search"><span>⌕</span><b>Поиск</b></button>
+        <button type="button" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
+        <button type="button" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
+        <button type="button" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
+      </nav>
+      <p class="drawer-note">Прогресс, тема и параметры чтения хранятся локально на этом устройстве.</p>
     </aside>
   </div>
 
-  <div id="toast" class="toast"></div>
-  <script src="./app.js"></script>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">Для работы приложения нужен JavaScript.</div></noscript>
 </body>
 </html>
