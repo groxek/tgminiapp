@@ -122,7 +122,20 @@
     if(!cs.length)html+='<div class="empty">У лекции пока нет материала.</div>';
     html+='</div><div id="quizMode" class="hidden"></div><div class="reader-actions"><button id="readTab" class="action-btn primary" type="button">Читать</button><button id="quizTab" class="action-btn" type="button">Квиз</button></div>';
     root.innerHTML=html;
+    root.querySelectorAll('.reader-card').forEach(function(card,idx){
+      card.setAttribute('data-section', String(idx+1));
+      var h=card.querySelector('h2');
+      if(h){ h.innerHTML='<span class="section-number">'+(idx+1)+'</span><span class="section-title-text">'+h.innerHTML+'</span>'; }
+      card.querySelectorAll('h3').forEach(function(h3){ h3.classList.add('subsection-title'); });
+      card.querySelectorAll('p').forEach(function(p){
+        if(!p.textContent.trim() && !p.querySelector('img,br')) p.classList.add('empty-p');
+      });
+    });
     root.querySelectorAll('.reader-card table').forEach(function(t){var w=document.createElement('div');w.className='table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t)});
+    root.querySelectorAll('.reader-card .callout').forEach(function(c){
+      var title=c.querySelector('.callout-title');
+      if(title) title.classList.add('callout-title-enhanced');
+    });
     $('backLecture').addEventListener('click',function(){go('#/subject/'+encodeURIComponent(s.id))});
     $('readTab').addEventListener('click',function(){toggleReader('read')});
     $('quizTab').addEventListener('click',function(){toggleReader('quiz')});
