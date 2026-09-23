@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>Конспекты</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+  <script src="./data.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <button id="menuBtn" class="icon-btn" type="button" aria-label="Меню">☰</button>
+      <div class="topbar-copy">
+        <div id="crumb" class="crumb">Конспекты</div>
+        <div id="screenTitle" class="screen-title">Предметы</div>
+      </div>
+      <button id="searchBtn" class="icon-btn" type="button" aria-label="Поиск">⌕</button>
+    </header>
+
+    <main id="screen" class="screen"></main>
+
+    <nav class="bottom-nav" aria-label="Навигация">
+      <button class="bottom-item active" data-route="#/" type="button"><span>⌂</span><b>Предметы</b></button>
+      <button class="bottom-item" data-route="#/search" type="button"><span>⌕</span><b>Поиск</b></button>
+      <button class="bottom-item" data-route="#/settings" type="button"><span>⚙</span><b>Настройки</b></button>
+    </nav>
+  </div>
+
+  <div id="drawer" class="drawer-layer hidden" aria-hidden="true">
+    <div id="drawerShade" class="drawer-shade"></div>
+    <aside class="drawer" role="dialog" aria-modal="true">
+      <div class="drawer-head">
+        <div>
+          <div class="drawer-title">Конспекты</div>
+          <div id="drawerStats" class="drawer-subtitle"></div>
+        </div>
+        <button id="drawerClose" class="icon-btn" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <div class="drawer-actions">
+        <button class="drawer-link" data-route="#/" type="button">⌂ <span>Предметы</span></button>
+        <button class="drawer-link" data-route="#/search" type="button">⌕ <span>Поиск</span></button>
+        <button class="drawer-link" data-route="#/settings" type="button">⚙ <span>Оформление</span></button>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Темы</div>
+        <div id="quickThemes" class="quick-grid"></div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Шрифт</div>
+        <div id="quickFonts" class="quick-fonts"></div>
+      </div>
+      <button id="resetProgress" class="danger-btn" type="button">Сбросить прогресс</button>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
