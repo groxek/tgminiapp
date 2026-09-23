@@ -1,28 +1,16 @@
 # Конспекты — Telegram Mini App
 
-Статический Mini App на чистом HTML/CSS/JS. Данные лекций взяты из исходного HTML.
+Статический Telegram Mini App на HTML/CSS/JS. Внутри: предметы → лекции → чтение → квиз, поиск, прогресс, темы и шрифты.
 
-## Что внутри
+## Как обновлять после изменений
 
-- предметы → лекции → чтение → квиз;
-- поиск;
-- 13+ тем;
-- 5 шрифтов без внешних font-файлов;
-- размер текста;
-- прогресс в `localStorage`;
-- Telegram BackButton / theme color / fullscreen expand.
+1. Открой репозиторий `groxek/tgminiapp`.
+2. Нажми **Add file → Upload files**.
+3. Загрузи новые `index.html`, `app.js`, `styles.css`, `data.js` из этой папки.
+4. Нажми **Commit changes**.
+5. Подожди 1–2 минуты — GitHub Pages сам обновит сайт.
+6. URL Telegram менять не нужно: он остаётся `https://groxek.github.io/tgminiapp/`.
 
-## Запуск
+## Важно
 
-Нужен HTTPS-хостинг. Самый простой путь — GitHub Pages.
-
-1. Создай репозиторий на GitHub.
-2. Загрузи сюда все файлы из этой папки.
-3. Settings → Pages → Deploy from branch → `main` → `/ (root)` → Save.
-4. Получишь URL вида `https://USERNAME.github.io/REPO/`.
-5. В @BotFather открой своего бота → Bot Settings → Menu Button → Configure Menu Button.
-6. Текст кнопки: `📚 Конспекты`.
-7. URL: адрес GitHub Pages.
-8. В Telegram открой бота и нажми кнопку меню.
-
-Для полноценного Mini App Telegram ожидает HTTPS URL. Также можно назначить его как Main Mini App через @BotFather.
+`data.js` содержит сами конспекты. Если меняешь только оформление — достаточно обновить `styles.css` и при необходимости `app.js`.
