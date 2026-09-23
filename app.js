@@ -495,10 +495,27 @@
     const reveal = $('revealQuiz'); if (reveal) reveal.addEventListener('click', () => { quizRuntime.revealed = true; renderQuizPage(); });
     const skip = $('skipQuiz'); if (skip) skip.addEventListener('click', () => nextQuiz(false));
     const next = $('nextQuiz'); if (next) next.addEventListener('click', () => nextQuiz(true));
-    root.querySelectorAll('[data-rate]').forEach(btn => btn.addEventListener('click', () => { const value = btn.dataset.rate; state.quizAssessment[q.id] = value; quizRuntime.marked[q.id] = value; saveState(); haptic(value === 'know' ? 'success' : 'light'); renderQuizPage(); }));
+    root.querySelectorAll('[data-rate]').forEach(btn => btn.addEventListener('click', () => {
+      const value = btn.dataset.rate;
+      if (!state.quizAssessment) state.quizAssessment = {};
+      state.quizAssessment[q.id] = value;
+      quizRuntime.marked[q.id] = value;
+      saveState();
+      haptic(value === 'know' ? 'success' : 'light');
+      nextQuiz();
+    }));
   }
 
-  function nextQuiz() { if (quizRuntime.index + 1 >= quizRuntime.items.length) quizRuntime.completed = true; else { quizRuntime.index++; quizRuntime.revealed = false; } renderQuizPage(); }
+  function nextQuiz() {
+    if (!quizRuntime) return;
+    if (quizRuntime.index + 1 >= quizRuntime.items.length) {
+      quizRuntime.completed = true;
+    } else {
+      quizRuntime.index++;
+      quizRuntime.revealed = false;
+    }
+    renderQuizPage();
+  }
   function renderQuizSummary(s, all) {
     const values = quizRuntime.items.map(q => quizRuntime.marked[q.id] || 'skip');
     const know = values.filter(x => x === 'know').length, weak = values.filter(x => x === 'weak').length, skip = values.length - know - weak;
@@ -526,7 +543,18 @@
     const applyFilter = () => root.querySelectorAll('.session-question').forEach(row => { const matchStatus = filter === 'all' || row.dataset.status === filter; const matchSearch = !search || row.dataset.search.includes(search); row.hidden = !(matchStatus && matchSearch); });
     $('sessionSearch').addEventListener('input', e => { search = e.target.value.trim().toLowerCase(); applyFilter(); });
     root.querySelectorAll('[data-filter]').forEach(btn => btn.addEventListener('click', () => { filter = btn.dataset.filter; root.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b === btn)); applyFilter(); }));
-    root.querySelectorAll('[data-status-cycle]').forEach(btn => btn.addEventListener('click', () => { const q = (ex.questions || []).find(x => Number(x.n) === Number(btn.dataset.statusCycle)); if (!q) return; const ns = nextStatus(getStatus(ex, q)); setStatus(ex, q, ns); btn.className = `status-btn ${ns}`; btn.textContent = statusLabel(ns); btn.closest('.session-question').dataset.status = ns; haptic(ns === 'know' ? 'success' : 'light'); applyFilter(); }));
+    root.querySelectorAll('[data-status-cycle]').forEach(btn => btn.addEventListener('click', () => {
+      const q = (ex.questions || []).find(x => Number(x.n) === Number(btn.dataset.statusCycle));
+      if (!q) return;
+      const ns = nextStatus(getStatus(ex, q));
+      setStatus(ex, q, ns);
+      btn.className = `status-btn ${ns}`;
+      btn.textContent = statusLabel(ns);
+      const row = btn.closest('.session-question');
+      if (row) row.dataset.status = ns;
+      haptic(ns === 'know' ? 'success' : 'light');
+      applyFilter();
+    }));
     root.querySelectorAll('[data-train-one]').forEach(btn => btn.addEventListener('click', () => { const q = (ex.questions || []).find(x => Number(x.n) === Number(btn.dataset.trainOne)); if (!q) return; go(`#/session/${encodeURIComponent(ex.id)}/one/${encodeURIComponent(q.n)}`); }));
   }
 
@@ -554,7 +582,13 @@
     const root = setScreen(`<button class="inline-back" data-route="#/session/${encodeURIComponent(ex.id)}">← К вопросам</button><section class="training-shell"><div class="quiz-head"><div><span class="eyebrow">${sessionRuntime.single ? 'Случайный вопрос' : 'Тренировка'}</span><h1>${esc(ex.name)}</h1></div><span class="quiz-mode">${sessionRuntime.index + 1}/${sessionRuntime.items.length}</span></div><div class="progress"><i style="width:${pct}%"></i></div><article class="quiz-card session-training-card"><div class="quiz-number">${q.displayN || q.n}</div>${q.unit ? `<div class="question-context">${esc(q.unit)}${q.theme ? ' · ' + esc(q.theme) : ''}</div>` : ''}<h2>${esc(q.text)}</h2>${answer ? (sessionRuntime.revealed ? answerHtml : '<button class="primary-btn wide" id="revealSession">Показать ответ</button>') : '<div class="answer-panel missing"><div class="answer-label">Подтверждённого ответа нет</div><p>Исходный список содержит вопрос, но не содержит готового ответа. Приложение ничего не придумывает.</p></div>'}${q.lecture ? `<button class="lecture-link-card" data-route="#/lecture/${encodeURIComponent(q.lecture.subjectId)}/${q.lecture.num}">Открыть связанную лекцию →</button>` : ''}<div class="self-check"><button class="rate-btn weak ${st === 'learning' ? 'active' : ''}" data-session-rate="learning">Учу</button><button class="rate-btn know ${st === 'know' ? 'active' : ''}" data-session-rate="know">Знаю</button></div><button class="secondary-btn wide" id="nextSession">${sessionRuntime.single || sessionRuntime.index + 1 >= sessionRuntime.items.length ? 'Завершить' : 'Следующий →'}</button></article></section>`, 'session-train-screen');
     bindRoutes(root);
     const reveal = $('revealSession'); if (reveal) reveal.addEventListener('click', () => { sessionRuntime.revealed = true; renderSessionTraining(); });
-    root.querySelectorAll('[data-session-rate]').forEach(btn => btn.addEventListener('click', () => { setStatus(ex, q, btn.dataset.sessionRate); haptic(btn.dataset.sessionRate === 'know' ? 'success' : 'light'); renderSessionTraining(); }));
+    root.querySelectorAll('[data-session-rate]').forEach(btn => btn.addEventListener('click', () => {
+      setStatus(ex, q, btn.dataset.sessionRate);
+      haptic(btn.dataset.sessionRate === 'know' ? 'success' : 'light');
+      sessionRuntime.index++;
+      sessionRuntime.revealed = false;
+      renderSessionTraining();
+    }));
     $('nextSession').addEventListener('click', () => { sessionRuntime.index++; sessionRuntime.revealed = false; renderSessionTraining(); });
   }
 
