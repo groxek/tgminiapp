@@ -115,6 +115,70 @@
     $('backSubject').addEventListener('click',function(){go('#/')});
     root.querySelectorAll('[data-lecture]').forEach(function(b){b.addEventListener('click',function(){go('#/lecture/'+encodeURIComponent(s.id)+'/'+b.getAttribute('data-lecture'))})});
   }
+const QUIZ_ANSWERS = {
+  "english-higher-education-q1": "<strong>to enrol</strong> — зачисляться/поступать в учебное заведение; <strong>to graduate</strong> — окончить обучение, выпуститься из университета/колледжа.",
+  "english-higher-education-q2": "<strong>Primary education</strong> — начальное, <strong>secondary education</strong> — среднее, <strong>higher education</strong> — высшее образование.",
+  "english-higher-education-q3": "<strong>Sandwich course</strong> — курс с практикой на предприятии: обучение чередуется с периодом практической работы.",
+  "english-higher-education-q4": "Например: <em>You must pass the entrance examinations and get the required passing grade.</em>",
+  "english-higher-education-q5": "<strong>Internship</strong> — стажировка и практический опыт; <strong>tutorial</strong> — занятие с преподавателем, семинар/консультация.",
+  "matlogika-mnozhestva-q1": "<code>A ⊂ B</code> означает строгое включение: A является подмножеством B и A ≠ B. <code>A ⊆ B</code> допускает A = B.",
+  "matlogika-mnozhestva-q2": "<code>A △ B = (A ∪ B) ∖ (A ∩ B)</code> и эквивалентно <code>A △ B = (A ∖ B) ∪ (B ∖ A)</code>.",
+  "matlogika-mnozhestva-q3": "Дополнение объединения равно пересечению дополнений. Дополнение пересечения равно объединению дополнений.",
+  "matlogika-mnozhestva-q4": "<code>A ∩ ∅ = ∅</code>; <code>A ∪ U = U</code>.",
+  "matlogika-mnozhestva-q5": "<code>A △ B = {1,2,3,6,7}</code>. Так как <code>A ∩ B = {4,5}</code>, то <code>U ∖ (A ∩ B) = {1,2,3,6,7,8,9,10}</code>.",
+  "istoriya-vvedenie-q1": "Познавательная; интеллектуально-развивающая; практико-политическая; мировоззренческая; воспитательная (в том числе формирование научной идентичности).",
+  "istoriya-vvedenie-q2": "Исторический источник — аутентичный памятник прошлого: документы или предметы, непосредственно отразившие исторический процесс. Исторический факт — реальное событие прошлого, знание о котором получают, сопоставляя данные разных источников.",
+  "istoriya-vvedenie-q3": "Например: <strong>вещественный</strong> — монета или археологический предмет; <strong>письменный</strong> — летопись; <strong>изобразительный</strong> — историческая картина или карта.",
+  "istoriya-vvedenie-q4": "Материалистическая теория рассматривает единый исторический процесс всех стран, закономерность, причинно-следственные связи и прогресс. Цивилизационная теория изучает локальные исторические цивилизации и их особенности развития.",
+  "istoriya-vvedenie-q5": "Зарождение → становление → расцвет → упадок → гибель.",
+  "istoriya-vvedenie-q6": "В западной цивилизации характерны частная собственность на землю и рационализм человека в преобразовательной деятельности. Для восточной — общественный характер землепользования и приниженность человека перед природой; также подчёркивается почитание традиций прошлого.",
+  "istoriya-vvedenie-q7": "Россия расположена в Европе и Азии и вобрала в себя наследие Запада и Востока, поэтому в конспекте она названа 'мостом' между ними.",
+  "linal-opredeliteli-q1": "Алгебраическое дополнение связано с минором формулой <code>Aᵢⱼ = (−1)^(i+j) · Mᵢⱼ</code>.",
+  "linal-opredeliteli-q2": "При разложении по строке/столбцу с нулями большинство слагаемых сразу исчезает, поэтому нужно считать меньше миноров.",
+  "linal-opredeliteli-q3": "При перестановке двух строк определитель меняет знак. При умножении одной строки на 5 определитель тоже умножается на 5.",
+  "linal-opredeliteli-q4": "У треугольной матрицы все элементы по одну сторону главной диагонали равны нулю, поэтому в разложении остаётся произведение диагональных элементов.",
+  "linal-opredeliteli-q5": "В методе Крамера <code>Aᵢ</code> — матрица A, у которой i-й столбец заменён столбцом B. Формула: <code>xᵢ = det(Aᵢ) / det(A)</code>. Метод применим, только если <code>det(A) ≠ 0</code>.",
+  "linal-opredeliteli-q6": "<code>|2  1; 3  4| = 2·4 − 1·3 = 5</code>.",
+  "matan-osnovy-q1": "<strong>b = sup A</strong>, если b — верхняя граница A и при любом <code>b' &lt; b</code> найдётся элемент <code>x₀ ∈ A</code> такой, что <code>x₀ &gt; b'</code>. Второе условие означает, что меньшую верхнюю границу выбрать уже нельзя: b — точная верхняя грань.",
+  "matan-osnovy-q2": "Например, <code>A = (0,1)</code>: <code>sup A = 1</code>, но <code>1 ∉ A</code>.",
+  "matan-osnovy-q3": "Свойство Архимеда говорит, что для любого вещественного α существует целое n ≥ α. Непрерывность вложенных отрезков говорит, что для любой системы вложенных отрезков существует хотя бы одна общая точка; это свойство отличает R от Q.",
+  "matan-osnovy-q4": "Стандартная ε–N формулировка: <code>∀ε&gt;0 ∃N∈N: n&gt;N ⇒ |aₙ−a|&lt;ε</code>. Здесь ε — заданная точность, N — номер, после которого все члены последовательности находятся от a ближе, чем на ε. <em>В карточке формула ε–N явно не приведена; это стандартная формулировка.</em>",
+  "matan-osnovy-q5": "Стандартный список 7 форм: <code>0/0</code>, <code>∞/∞</code>, <code>∞−∞</code>, <code>0·∞</code>, <code>1^∞</code>, <code>0^0</code>, <code>∞^0</code>. <em>В карточке указано, что форм семь, но сам перечень не выписан.</em>",
+  "matan-osnovy-q6": "Домножить на сопряжённое и одновременно разделить на него: <code>√A − √B</code> превращается через разность квадратов в выражение без разности корней в числителе.",
+  "matan-osnovy-q7": "Делим числитель и знаменатель на <code>n³</code>: <code>(2 + 1/n²)/(5 − 1/n) → 2/5</code>.",
+  "physics-kinematics-q1": "Тангенциальное ускорение <code>aτ = dv/dt</code> изменяет модуль скорости, а нормальное <code>aₙ = v²/R</code> — её направление. При равномерном движении по окружности <strong>aτ = 0</strong>, а нормальное ускорение остаётся ненулевым.",
+  "physics-kinematics-q2": "Три формулы: <code>v = v₀ + at</code>; <code>Δx = v₀t + at²/2</code>; <code>v² − v₀² = 2aΔx</code>. Если время неизвестно, используют последнюю формулу.",
+  "physics-kinematics-q3": "При броске под углом скорость минимальна в верхней точке: вертикальная составляющая <code>vᵧ = 0</code>, а остаётся горизонтальная <code>vₓ = v₀ cos α</code>. Поэтому <code>v_min = v₀ cos α</code>.",
+  "physics-kinematics-q4": "Подставь <code>v = ωR</code> в <code>aₙ = v²/R</code>: <code>aₙ = (ωR)²/R = ω²R</code>.",
+  "physics-kinematics-q5": "При одинаковой высоте начала и конца полёта дальность содержит множитель <code>sin 2α</code>. Максимум равен 1 при <code>2α = 90°</code>, поэтому <code>α = 45°</code>.",
+  "physics-kinematics-q6": "<code>ε</code> — угловое ускорение. Его аналогом в поступательном движении является линейное ускорение <code>a</code>."
+};
+
+  function prepareMath(root){
+    if(!root) return;
+    root.querySelectorAll('.math-display').forEach(function(el){
+      if(el.getAttribute('data-math-ready')==='1') return;
+      var tex=el.textContent.replace(/\u00a0/g,' ').trim();
+      if(!tex) return;
+      el.textContent='\\['+tex+'\\]';
+      el.setAttribute('data-math-ready','1');
+    });
+    root.querySelectorAll('.formula').forEach(function(el){
+      if(el.getAttribute('data-math-ready')==='1') return;
+      var tex=el.textContent.replace(/\u00a0/g,' ').trim();
+      if(!tex) return;
+      el.textContent='\\('+tex+'\\)';
+      el.setAttribute('data-math-ready','1');
+    });
+  }
+  function typesetMath(root){
+    prepareMath(root);
+    if(window.MathJax && typeof window.MathJax.typesetPromise==='function'){
+      try{ window.MathJax.typesetPromise([root]); }catch(e){}
+    }
+  }
+  window.addEventListener('load',function(){setTimeout(function(){typesetMath(document);},0)});
+
   function renderLecture(){
     var root=$('screen'),s=getSubject(route.id),l=getLecture(s,route.num);if(!s||!l){go('#/');return}
     var cs=getCards(s,l.num),html='<div class="back-row"><button class="back-btn" id="backLecture">‹ '+esc(s.name)+'</button></div><div class="reader-head"><h1>'+esc(l.title)+'</h1><div class="summary">'+esc(l.summary||'')+'</div></div><div id="readMode">';
@@ -132,6 +196,7 @@
       });
     });
     root.querySelectorAll('.reader-card table').forEach(function(t){var w=document.createElement('div');w.className='table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t)});
+    typesetMath(root);
     root.querySelectorAll('.reader-card .callout').forEach(function(c){
       var title=c.querySelector('.callout-title');
       if(title) title.classList.add('callout-title-enhanced');
@@ -147,9 +212,18 @@
     if(mode==='quiz'){read.style.display='none';quiz.classList.remove('hidden');rb.classList.remove('primary');qb.classList.add('primary');renderQuiz()}else{read.style.display='block';quiz.classList.add('hidden');rb.classList.add('primary');qb.classList.remove('primary')}
   }
   function renderQuiz(){
-    var s=getSubject(route.id),qs=getQuestions(s,route.num),root=$('quizMode');if(!qs.length){root.innerHTML='<div class="empty">Для этой лекции вопросов пока нет.</div>';return}
-    var index=Math.max(0,Math.min(Number($('screen').dataset.qIndex)||0,qs.length-1)),q=qs[index],answer=q.hint||'Ответ пока не добавлен.';
-    root.innerHTML='<div class="quiz-box"><div class="quiz-count">Вопрос '+(index+1)+' из '+qs.length+'</div><h2>'+((q.q)||'')+'</h2><details class="answer"><summary>Показать ответ</summary><div class="answer-body">'+answer+'</div></details><button class="next-btn" id="nextQ" type="button">'+(index+1<qs.length?'Следующий вопрос':'Начать заново')+'</button></div>';
+    var s=getSubject(route.id),qs=getQuestions(s,route.num),root=$('quizMode');
+    if(!qs.length){root.innerHTML='<div class="empty"><strong>Для этой лекции пока нет вопросов.</strong><br><span class="muted">Добавим их в следующем обновлении.</span></div>';return}
+    var index=Math.max(0,Math.min(Number($('screen').dataset.qIndex)||0,qs.length-1)),q=qs[index];
+    var answer=q.answer||QUIZ_ANSWERS[q.id]||'Ответ для этого вопроса пока не добавлен.';
+    root.innerHTML='<div class="quiz-box">'+
+      '<div class="quiz-topline"><div class="quiz-count">Вопрос '+(index+1)+' из '+qs.length+'</div><div class="quiz-badge">🧠 Самопроверка</div></div>'+
+      '<div class="quiz-question-label">ВОПРОС</div><h2>'+((q.q)||'')+'</h2>'+
+      '<details class="answer"><summary>💡 Показать ответ</summary><div class="answer-body">'+answer+'</div></details>'+
+      '<div class="quiz-tip">Сначала ответь сам, потом открой ответ и сравни.</div>'+
+      '<button class="next-btn" id="nextQ" type="button">'+(index+1<qs.length?'Следующий вопрос →':'Пройти заново ↻')+'</button>'+
+      '</div>';
+    typesetMath(root);
     $('nextQ').addEventListener('click',function(){$('screen').dataset.qIndex=String((index+1)%qs.length);renderQuiz()});
   }
   function renderSearch(){

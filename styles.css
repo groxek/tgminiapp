@@ -102,3 +102,29 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
   .reader-card,.reader-actions{max-width:1020px;}
   .screen:has(.reader-head){max-width:1160px;}
 }
+
+/* v4: expressive cards + reliable rendered mathematics */
+.subject-card,.lecture-card{position:relative;overflow:hidden}
+.subject-card:after,.lecture-card:after{content:"";position:absolute;right:-38px;top:-42px;width:120px;height:120px;border-radius:50%;background:var(--soft);pointer-events:none;opacity:.9}
+.subject-card:nth-child(3n+1) .card-icon{background:rgba(124,92,255,.18);color:#a99cff}
+.subject-card:nth-child(3n+2) .card-icon{background:rgba(51,182,232,.18);color:#6bdcff}
+.subject-card:nth-child(3n) .card-icon{background:rgba(73,217,154,.18);color:#6ff0b4}
+.subject-card:nth-child(4n) .card-icon{background:rgba(255,107,157,.18);color:#ff9abd}
+.subject-card .card-title{font-size:16px;letter-spacing:-.01em}
+.subject-card .card-meta{font-weight:650}
+.page-intro{position:relative;overflow:hidden}
+.page-intro:after{content:"";position:absolute;right:-55px;top:-70px;width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,var(--soft),transparent 68%);pointer-events:none}
+.reader-card .MathJax{font-size:1.06em}
+.reader-card .math-display{white-space:normal;overflow-x:auto;text-align:center;font-family:inherit;color:var(--text);line-height:1.4}
+.reader-card .math-display .MathJax{max-width:100%}
+.reader-card .formula{font-family:inherit;background:transparent;padding:0;color:var(--accent2);font-weight:700}
+.reader-card .MathJax svg{max-width:100%;height:auto}
+.quiz-box{position:relative;overflow:hidden}
+.quiz-box:before{content:"";position:absolute;right:-50px;top:-70px;width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,var(--soft),transparent 70%);pointer-events:none}
+.quiz-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.quiz-badge{font-size:10px;font-weight:900;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--accent2);white-space:nowrap}
+.quiz-question-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--accent);margin-bottom:5px}
+.quiz-tip{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:12px;line-height:1.5}
+.quiz-box .answer{position:relative;z-index:1}
+.quiz-box .next-btn{position:relative;z-index:1;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#071018}
+@media (min-width:1024px){.subject-card,.lecture-card{min-height:132px}.subject-card .card-title{font-size:17px}.quiz-box{max-width:820px;margin:0 auto;padding:28px}.quiz-box h2{font-size:23px}.reader-card .math-display{font-size:1.02em}}
