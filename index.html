@@ -1,107 +1,75 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-scheme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b0b18">
-  <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Конспекты — учебное Telegram Mini App: лекции, квизы, вопросы сессии и материалы.">
+  <meta name="theme-color" content="#08070f">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Конспекты — учебное Telegram Mini App: лекции в Markdown, квизы, вопросы к сессии с ответами и материалы.">
   <title>Конспекты</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%239383ff'/%3E%3Cstop offset='1' stop-color='%234fd8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='20' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='34' font-weight='800' text-anchor='middle' fill='%230b0a12'%3EК%3C/text%3E%3C/svg%3E">
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
-  <script>
-    window.MathJax = {
-      loader: { load: ['[tex]/ams'] },
-      tex: {
-        packages: { '[+]': ['ams'] },
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']],
-        processEscapes: false,
-        processEnvironments: true
-      },
-      chtml: {
-        matchFontHeight: false,
-        displayAlign: 'center',
-        displayIndent: '0'
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      },
-      startup: {
-        typeset: false,
-        ready: function () {
-          MathJax.startup.defaultReady();
-          window.dispatchEvent(new Event('mathjax-ready'));
-        }
-      }
-    };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-  <script defer src="./data.js"></script>
-  <link rel="stylesheet" href="./styles.css">
-  <script defer src="./app.js"></script>
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/reader.css">
+  <link rel="stylesheet" href="assets/css/quiz.css">
+
+  <link rel="modulepreload" href="assets/js/app.js">
+  <link rel="modulepreload" href="assets/js/core/dom.js">
+  <link rel="modulepreload" href="assets/js/core/router.js">
+  <link rel="modulepreload" href="assets/js/core/store.js">
+  <link rel="modulepreload" href="assets/js/core/telegram.js">
+  <link rel="modulepreload" href="assets/js/core/theme.js">
+  <link rel="modulepreload" href="assets/js/content/catalog.js">
+  <link rel="modulepreload" href="assets/js/content/markdown.js">
+  <link rel="modulepreload" href="assets/vendor/marked.esm.js">
+
+  <script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
-  <div id="appShell" class="app-shell">
-    <aside id="sidebar" class="sidebar" aria-label="Основная навигация">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">К</span>
-        <div><strong>Конспекты</strong><small>study workspace</small></div>
-      </div>
+  <div class="aurora" aria-hidden="true"></div>
 
-      <nav class="side-nav">
-        <button type="button" data-nav="home" data-route="#/"><span>⌂</span><b>Главная</b></button>
-        <button type="button" data-nav="session" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
-        <button type="button" data-nav="materials" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
-        <button type="button" data-nav="settings" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
-      </nav>
-
-      <div class="side-section-label">Предметы</div>
-      <div id="sidebarSubjects" class="sidebar-subjects"></div>
-      <div class="side-spacer"></div>
-      <button class="side-search" type="button" data-route="#/search"><span>⌕</span><b>Поиск</b><kbd>/</kbd></button>
+  <div id="app" class="app">
+    <aside class="sidebar" aria-label="Основная навигация">
+      <a class="brand" href="#/">
+        <span class="brand__mark" aria-hidden="true">К</span>
+        <span><strong>Конспекты</strong><small>study workspace</small></span>
+      </a>
+      <nav class="side-nav" id="sideNav"></nav>
+      <div class="side-label">Предметы</div>
+      <nav class="side-nav" id="sidebarSubjects" aria-label="Предметы"></nav>
+      <div class="side-foot">Нажмите <kbd>/</kbd> для поиска</div>
     </aside>
 
-    <div class="app-main">
+    <div class="main">
       <header class="topbar">
-        <button id="leftBtn" class="icon-btn" type="button" aria-label="Меню">☰</button>
-        <div class="topbar-copy">
-          <div id="crumb" class="crumb">Конспекты</div>
-          <div id="screenTitle" class="screen-title">Главная</div>
+        <button id="backBtn" class="icon-btn" type="button" data-action="back" aria-label="Назад" hidden>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 18-6-6 6-6"/></svg>
+        </button>
+        <a class="topbar__brand" href="#/" aria-label="Главная">К</a>
+        <div class="topbar__titles">
+          <div id="crumb" class="topbar__crumb"></div>
+          <div id="screenTitle" class="topbar__title">Конспекты</div>
         </div>
-        <button id="searchBtn" class="icon-btn" type="button" aria-label="Поиск">⌕</button>
+        <div id="topActions" class="topbar__actions"></div>
       </header>
-
-      <main id="screen" class="screen" tabindex="-1"></main>
+      <div id="readingProgress" class="reading-progress" aria-hidden="true"><span></span></div>
+      <main id="screen" class="screen" tabindex="-1">
+        <div class="skeleton-page" aria-busy="true" aria-label="Загрузка">
+          <div class="sk sk--hero"></div>
+          <div class="sk-grid"><div class="sk sk--card"></div><div class="sk sk--card"></div><div class="sk sk--card"></div><div class="sk sk--card"></div></div>
+        </div>
+      </main>
     </div>
 
-    <nav class="bottom-nav" aria-label="Основная навигация">
-      <button type="button" data-nav="home" data-route="#/"><span>⌂</span><b>Главная</b></button>
-      <button type="button" data-nav="session" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
-      <button type="button" data-nav="materials" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
-      <button type="button" data-nav="settings" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
-    </nav>
-  </div>
-
-  <div id="drawer" class="drawer-layer hidden" aria-hidden="true">
-    <button id="drawerShade" class="drawer-shade" type="button" aria-label="Закрыть меню"></button>
-    <aside class="drawer" role="dialog" aria-modal="true" aria-label="Меню">
-      <div class="drawer-head">
-        <div class="brand compact-brand"><span class="brand-mark">К</span><div><strong>Конспекты</strong><small>Навигация</small></div></div>
-        <button id="drawerClose" class="icon-btn" type="button" aria-label="Закрыть">×</button>
-      </div>
-      <nav class="drawer-nav">
-        <button type="button" data-route="#/"><span>⌂</span><b>Главная</b></button>
-        <button type="button" data-route="#/search"><span>⌕</span><b>Поиск</b></button>
-        <button type="button" data-route="#/session"><span>🎯</span><b>Сессия</b></button>
-        <button type="button" data-route="#/materials"><span>📎</span><b>Материалы</b></button>
-        <button type="button" data-route="#/settings"><span>⚙</span><b>Настройки</b></button>
-      </nav>
-      <p class="drawer-note">Прогресс, тема и параметры чтения хранятся локально на этом устройстве.</p>
-    </aside>
+    <nav id="tabbar" class="tabbar" aria-label="Разделы"></nav>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <noscript><div class="noscript">Для работы приложения нужен JavaScript.</div></noscript>
+  <noscript><p style="padding:24px;text-align:center">Для работы приложения нужен JavaScript.</p></noscript>
 </body>
 </html>

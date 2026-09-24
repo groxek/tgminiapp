@@ -1,0 +1,18 @@
+# GitHub Pages builds this repository with Jekyll ("Deploy from a branch").
+# The app itself is plain static files; Jekyll only renders content/manifest.json —
+# the list of every file in content/, so new lectures need no code changes.
+
+title: Конспекты
+
+# Keep Markdown files raw: they are fetched and rendered by the app, not by Jekyll.
+# (Disables jekyll-optional-front-matter / jekyll-readme-index from GitHub Pages.)
+require_front_matter: true
+optional_front_matter:
+  enabled: false
+readme_index:
+  enabled: false
+
+exclude:
+  - tools/
+  - README.md
+  - package.json

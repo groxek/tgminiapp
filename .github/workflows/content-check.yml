@@ -1,0 +1,27 @@
+name: Проверка контента
+
+on:
+  push:
+    paths:
+      - 'content/**'
+      - 'assets/js/content/**'
+      - 'tools/check-content.mjs'
+  pull_request:
+    paths:
+      - 'content/**'
+      - 'assets/js/content/**'
+      - 'tools/check-content.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Markdown-файлы читаются приложением без ошибок
+        run: node tools/check-content.mjs
