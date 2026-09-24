@@ -1,0 +1,130 @@
+/* Design tokens. Palette colors are overwritten at runtime by assets/js/core/theme.js;
+   the values below are the first-paint defaults (violet, dark). */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #08070f;
+  --bg-rgb: 8 7 15;
+  --surface: #14131c;
+  --surface-rgb: 20 19 28;
+  --surface-2: #1c1b25;
+  --surface-2-rgb: 28 27 37;
+  --text: #f4f3fb;
+  --text-rgb: 244 243 251;
+  --text-2: #b3b1c6;
+  --text-3: #7d7b92;
+  --accent: #9383ff;
+  --accent-rgb: 147 131 255;
+  --accent-2: #4fd8ff;
+  --accent-2-rgb: 79 216 255;
+  --accent-text: #b3a8ff;
+  --on-accent: #0b0a12;
+
+  --know: #34d399;
+  --know-rgb: 52 211 153;
+  --learning: #fbbf24;
+  --learning-rgb: 251 191 36;
+  --danger: #fb7185;
+  --danger-rgb: 251 113 133;
+
+  --glass: rgb(var(--surface-rgb) / 0.62);
+  --glass-strong: rgb(var(--surface-rgb) / 0.8);
+  --glass-border: rgb(var(--text-rgb) / 0.08);
+  --glass-highlight: rgb(255 255 255 / 0.055);
+  --line: rgb(var(--text-rgb) / 0.09);
+  --line-strong: rgb(var(--text-rgb) / 0.16);
+  --fill: rgb(var(--text-rgb) / 0.06);
+  --fill-strong: rgb(var(--text-rgb) / 0.1);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.28);
+  --shadow: 0 12px 32px -14px rgb(0 0 0 / 0.6), 0 2px 6px -2px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 28px 70px -24px rgb(0 0 0 / 0.75), 0 6px 18px -8px rgb(0 0 0 / 0.4);
+  --glow: 0 0 0 1px rgb(var(--accent-rgb) / 0.4), 0 10px 30px -8px rgb(var(--accent-rgb) / 0.6);
+  --glow-soft: 0 0 24px -6px rgb(var(--accent-rgb) / 0.55);
+
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  --gutter: 16px;
+  --page-max: 980px;
+
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-reading: var(--font-ui);
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+  --reader-size: 17px;
+  --reader-leading: 1.7;
+  --reader-width: 760px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-1: 140ms;
+  --dur-2: 240ms;
+  --dur-3: 420ms;
+
+  --topbar-h: 58px;
+  --tabbar-h: 66px;
+  --sidebar-w: 276px;
+  --safe-top: max(env(safe-area-inset-top, 0px), var(--tg-safe-top, 0px));
+  --safe-right: max(env(safe-area-inset-right, 0px), var(--tg-safe-right, 0px));
+  --safe-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-bottom, 0px));
+  --safe-left: max(env(safe-area-inset-left, 0px), var(--tg-safe-left, 0px));
+  --anchor-offset: calc(var(--topbar-h) + var(--safe-top) + 20px);
+}
+
+:root[data-scheme="light"] {
+  color-scheme: light;
+  --know: #059669;
+  --know-rgb: 5 150 105;
+  --learning: #d97706;
+  --learning-rgb: 217 119 6;
+  --danger: #e11d48;
+  --danger-rgb: 225 29 72;
+
+  --glass: rgb(var(--surface-rgb) / 0.74);
+  --glass-strong: rgb(var(--surface-rgb) / 0.9);
+  --glass-border: rgb(var(--text-rgb) / 0.08);
+  --glass-highlight: rgb(255 255 255 / 0.75);
+  --line: rgb(var(--text-rgb) / 0.08);
+  --line-strong: rgb(var(--text-rgb) / 0.14);
+  --fill: rgb(var(--text-rgb) / 0.045);
+  --fill-strong: rgb(var(--text-rgb) / 0.08);
+
+  --shadow-sm: 0 1px 2px rgb(24 16 64 / 0.08);
+  --shadow: 0 14px 34px -18px rgb(24 16 64 / 0.24), 0 2px 6px -2px rgb(24 16 64 / 0.07);
+  --shadow-lg: 0 30px 70px -28px rgb(24 16 64 / 0.32), 0 6px 16px -8px rgb(24 16 64 / 0.1);
+  --glow: 0 0 0 1px rgb(var(--accent-rgb) / 0.3), 0 10px 26px -10px rgb(var(--accent-rgb) / 0.55);
+  --glow-soft: 0 0 22px -8px rgb(var(--accent-rgb) / 0.5);
+}
+
+/* Per-subject accents (independent of the app palette). */
+.accent-violet { --sa: 147 131 255; --sa-2: 79 216 255; }
+.accent-indigo { --sa: 122 140 255; --sa-2: 192 123 255; }
+.accent-blue { --sa: 92 157 255; --sa-2: 69 224 255; }
+.accent-cyan { --sa: 63 214 224; --sa-2: 125 240 164; }
+.accent-ocean { --sa: 47 194 238; --sa-2: 88 230 192; }
+.accent-emerald { --sa: 61 220 151; --sa-2: 180 242 90; }
+.accent-mint { --sa: 79 224 176; --sa-2: 192 240 110; }
+.accent-amber { --sa: 245 184 61; --sa-2: 255 225 107; }
+.accent-warm { --sa: 255 157 87; --sa-2: 255 211 110; }
+.accent-crimson { --sa: 255 95 126; --sa-2: 255 180 94; }
+.accent-rose { --sa: 244 114 194; --sa-2: 178 140 255; }
+.accent-graphite { --sa: 183 195 212; --sa-2: 127 212 230; }
+
+[data-scheme="light"] .accent-violet { --sa: 106 80 224; --sa-2: 15 143 179; }
+[data-scheme="light"] .accent-indigo { --sa: 76 95 214; --sa-2: 132 69 194; }
+[data-scheme="light"] .accent-blue { --sa: 47 111 220; --sa-2: 15 142 176; }
+[data-scheme="light"] .accent-cyan { --sa: 19 148 157; --sa-2: 46 150 87; }
+[data-scheme="light"] .accent-ocean { --sa: 18 136 171; --sa-2: 31 138 108; }
+[data-scheme="light"] .accent-emerald { --sa: 31 148 99; --sa-2: 92 154 20; }
+[data-scheme="light"] .accent-mint { --sa: 33 154 115; --sa-2: 111 157 28; }
+[data-scheme="light"] .accent-amber { --sa: 178 120 8; --sa-2: 147 128 14; }
+[data-scheme="light"] .accent-warm { --sa: 196 101 32; --sa-2: 160 124 16; }
+[data-scheme="light"] .accent-crimson { --sa: 210 63 92; --sa-2: 194 113 29; }
+[data-scheme="light"] .accent-rose { --sa: 199 69 143; --sa-2: 112 72 207; }
+[data-scheme="light"] .accent-graphite { --sa: 78 91 108; --sa-2: 27 125 145; }
